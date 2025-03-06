@@ -1,0 +1,8 @@
+[keyboard]
+bindings = [
+   { key = "Return", mods = "Control|Shift", action = "SpawnNewInstance" }
+]
+
+[font.normal]
+family = "DepartureMono Nerd Font Mono"
+style = "Regular"
