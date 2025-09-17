@@ -1,7 +1,10 @@
 return {
 	"saghen/blink.cmp",
 	-- optional: provides snippets for the snippet source
-	dependencies = { "rafamadriz/friendly-snippets" },
+	dependencies = {
+		"rafamadriz/friendly-snippets",
+		{ "fang2hou/blink-copilot", opts = {} },
+	},
 
 	-- use a release tag to download pre-built binaries
 	version = "1.*",
@@ -15,7 +18,7 @@ return {
 	opts = {
 		-- 'default' (recommended) for mappings similar to built-in completions (C-y to accept)
 		-- 'super-tab' for mappings similar to vscode (tab to accept)
-		-- 'enter' for enter to accept
+		-- 'enter' for enter to acceptfc
 		-- 'none' for no mappings
 		--
 		-- All presets have the following mappings:
@@ -34,12 +37,20 @@ return {
 		},
 
 		-- (Default) Only show the documentation popup when manually triggered
-		completion = { menu = { auto_show = false }, documentation = { auto_show = false } },
+		completion = { menu = { auto_show = true }, documentation = { auto_show = false } },
 		signature = { enabled = true },
 		-- Default list of enabled providers defined so that you can extend it
 		-- elsewhere in your config, without redefining it, due to `opts_extend`
 		sources = {
-			default = { "lsp", "path", "snippets" },
+			default = { "copilot", "lsp", "path", "snippets" },
+			providers = {
+				copilot = {
+					name = "copilot",
+					module = "blink-copilot",
+					score_offset = 100,
+					async = true,
+				},
+			},
 		},
 
 		-- (Default) Rust fuzzy matcher for typo resistance and significantly better performance
