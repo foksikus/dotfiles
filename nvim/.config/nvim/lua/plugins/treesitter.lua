@@ -2,18 +2,40 @@
 -- parsers and queries; highlighting/indent are switched on per buffer below.
 -- Requires the `tree-sitter` CLI and a C compiler (see Brewfile).
 local parsers = {
+	-- C / C++
 	"c",
-	"css",
+	"cpp",
+	"cmake",
+	"make",
+	-- Go
 	"go",
-	"html",
+	"gomod",
+	"gosum",
+	"gowork",
+	-- Web
 	"javascript",
-	"json",
-	"lua",
-	"markdown",
-	"scss",
 	"typescript",
+	"tsx",
+	"jsdoc",
+	"html",
+	"css",
+	"scss",
+	"svelte",
+	"json",
+	-- Config / misc
+	"yaml",
+	"toml",
+	"bash",
+	"dockerfile",
+	"gitignore",
+	"lua",
+	"luadoc",
 	"vim",
 	"vimdoc",
+	"query",
+	"regex",
+	"markdown",
+	"markdown_inline",
 }
 
 return {

@@ -8,6 +8,68 @@ return {
 		require("mini.statusline").setup()
 		require("mini.jump").setup()
 
+		-- Surround on gs… (s belongs to flash): gsa{motion}{char} add,
+		-- gsd{char} delete, gsr{old}{new} replace, e.g. gsaiw" or gsr'"
+		require("mini.surround").setup({
+			mappings = {
+				add = "gsa",
+				delete = "gsd",
+				find = "gsf",
+				find_left = "gsF",
+				highlight = "gsh",
+				replace = "gsr",
+			},
+		})
+
+		-- Highlight TODO/FIXME/HACK/NOTE and show #rrggbb colours inline
+		local hipatterns = require("mini.hipatterns")
+		hipatterns.setup({
+			highlighters = {
+				fixme = { pattern = "%f[%w]()FIXME()%f[%W]", group = "MiniHipatternsFixme" },
+				hack = { pattern = "%f[%w]()HACK()%f[%W]", group = "MiniHipatternsHack" },
+				todo = { pattern = "%f[%w]()TODO()%f[%W]", group = "MiniHipatternsTodo" },
+				note = { pattern = "%f[%w]()NOTE()%f[%W]", group = "MiniHipatternsNote" },
+				hex_color = hipatterns.gen_highlighter.hex_color(),
+			},
+		})
+
+		-- Popup listing the next possible keys after <leader>, g, [, ], z, <C-w>, ...
+		local clue = require("mini.clue")
+		clue.setup({
+			triggers = {
+				{ mode = { "n", "x" }, keys = "<Leader>" },
+				{ mode = "n", keys = "[" },
+				{ mode = "n", keys = "]" },
+				{ mode = "i", keys = "<C-x>" },
+				{ mode = { "n", "x" }, keys = "g" },
+				{ mode = { "n", "x" }, keys = "'" },
+				{ mode = { "n", "x" }, keys = "`" },
+				{ mode = { "n", "x" }, keys = '"' },
+				{ mode = { "i", "c" }, keys = "<C-r>" },
+				{ mode = "n", keys = "<C-w>" },
+				{ mode = { "n", "x" }, keys = "z" },
+			},
+			clues = {
+				{ mode = "n", keys = "<Leader>a", desc = "+AI (Claude)" },
+				{ mode = "n", keys = "<Leader>c", desc = "+Code" },
+				{ mode = "n", keys = "<Leader>f", desc = "+Find" },
+				{ mode = "n", keys = "<Leader>h", desc = "+Git hunks" },
+				{ mode = "n", keys = "<Leader>l", desc = "+Format" },
+				{ mode = "n", keys = "<Leader>m", desc = "+Multicursor" },
+				{ mode = "n", keys = "<Leader>t", desc = "+Toggle" },
+				{ mode = "n", keys = "<Leader>w", desc = "+Workspace" },
+				{ mode = "n", keys = "gs", desc = "+Surround" },
+				clue.gen_clues.square_brackets(),
+				clue.gen_clues.builtin_completion(),
+				clue.gen_clues.g(),
+				clue.gen_clues.marks(),
+				clue.gen_clues.registers(),
+				clue.gen_clues.windows(),
+				clue.gen_clues.z(),
+			},
+			window = { delay = 300 },
+		})
+
 		-- a/i text objects. `af`/`if` and `aa`/`ia` use tree-sitter queries
 		-- (from nvim-treesitter-textobjects); everything else is mini.ai's
 		-- built-ins (brackets, quotes, `q`, `b`, `t` tags, ...).

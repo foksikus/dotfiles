@@ -3,22 +3,96 @@
 -- Mason installs the binaries. blink.cmp registers its capabilities on its own.
 
 -- Servers to install and enable. Add per-server overrides as the value.
+local inlay_hints_ts = {
+	parameterNames = { enabled = "literals" },
+	parameterTypes = { enabled = true },
+	variableTypes = { enabled = false },
+	propertyDeclarationTypes = { enabled = true },
+	functionLikeReturnTypes = { enabled = true },
+	enumMemberValues = { enabled = true },
+}
+
 local servers = {
-	clangd = {},
-	gopls = {},
-	ts_ls = {},
+	-- C / C++ (needs compile_commands.json, e.g. cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON)
+	clangd = {
+		cmd = {
+			"clangd",
+			"--background-index",
+			"--clang-tidy",
+			"--header-insertion=iwyu",
+			"--completion-style=detailed",
+		},
+	},
+
+	-- Go
+	gopls = {
+		settings = {
+			gopls = {
+				gofumpt = true,
+				staticcheck = true,
+				usePlaceholders = true,
+				analyses = { unusedparams = true, unusedwrite = true, nilness = true, shadow = true },
+				hints = {
+					assignVariableTypes = true,
+					compositeLiteralFields = true,
+					constantValues = true,
+					functionTypeParameters = true,
+					parameterNames = true,
+					rangeVariableTypes = true,
+				},
+			},
+		},
+	},
+
+	-- TypeScript / JavaScript / Node / Vite. The Svelte plugin lets .ts files
+	-- import .svelte components.
+	vtsls = {
+		settings = {
+			complete_function_calls = true,
+			vtsls = {
+				enableMoveToFileCodeAction = true,
+				autoUseWorkspaceTsdk = true,
+				tsserver = {
+					globalPlugins = {
+						{
+							name = "typescript-svelte-plugin",
+							location = vim.fn.stdpath("data")
+								.. "/mason/packages/svelte-language-server/node_modules/typescript-svelte-plugin",
+							enableForWorkspaceTypeScriptVersions = true,
+						},
+					},
+				},
+			},
+			typescript = {
+				updateImportsOnFileMove = { enabled = "always" },
+				suggest = { completeFunctionCalls = true },
+				inlayHints = inlay_hints_ts,
+			},
+			javascript = {
+				updateImportsOnFileMove = { enabled = "always" },
+				inlayHints = inlay_hints_ts,
+			},
+		},
+	},
+	svelte = {},
+	eslint = {}, -- only attaches in projects with an eslint config
+	html = {},
+	cssls = {}, -- css, scss, less
+	jsonls = {},
+
+	-- Lua (Neovim config)
 	lua_ls = {
 		settings = {
 			Lua = {
 				runtime = { version = "LuaJIT" },
-				workspace = { checkThirdParty = false, library = { vim.env.VIMRUNTIME } },
+				workspace = { checkThirdParty = false }, -- lazydev.nvim adds the Neovim library
 			},
 		},
 	},
 }
 
 -- Formatters used by conform.nvim
-local tools = { "stylua", "prettierd", "goimports" }
+local tools = { "stylua", "prettierd", "goimports", "gofumpt", "clang-format" }
 
 return {
 	"neovim/nvim-lspconfig",
@@ -66,6 +140,10 @@ return {
 				local client = vim.lsp.get_client_by_id(event.data.client_id)
 				if not client then
 					return
+				end
+
+				if client.name == "clangd" then
+					map("<leader>ch", "<cmd>LspClangdSwitchSourceHeader<cr>", "Switch header/source")
 				end
 
 				-- Highlight references of the word under the cursor

@@ -1,0 +1,37 @@
+{
+  "Typed function": {
+    "prefix": "fnt",
+    "body": ["function ${1:name}(${2:params}): ${3:void} {", "\t$0", "}"],
+    "description": "function with parameter and return types"
+  },
+  "Typed async function": {
+    "prefix": "asft",
+    "body": ["async function ${1:name}(${2:params}): Promise<${3:void}> {", "\t$0", "}"],
+    "description": "async function returning a Promise"
+  },
+  "Exported typed function": {
+    "prefix": "eft",
+    "body": ["export function ${1:name}(${2:params}): ${3:void} {", "\t$0", "}"],
+    "description": "exported function with types"
+  },
+  "Typed const arrow function": {
+    "prefix": "cft",
+    "body": ["const ${1:name} = (${2:params}): ${3:void} => {", "\t$0", "};"],
+    "description": "const arrow function with types"
+  },
+  "Typed async arrow function": {
+    "prefix": "aat",
+    "body": ["const ${1:name} = async (${2:params}): Promise<${3:void}> => {", "\t$0", "};"],
+    "description": "const async arrow function with types"
+  },
+  "Interface": {
+    "prefix": "int",
+    "body": ["interface ${1:Name} {", "\t${2:key}: ${3:string};$0", "}"],
+    "description": "interface declaration"
+  },
+  "Type alias": {
+    "prefix": "typ",
+    "body": ["type ${1:Name} = ${0:string};"],
+    "description": "type alias"
+  }
+}

@@ -14,8 +14,19 @@ return {
 		signature = { enabled = true },
 		sources = {
 			default = { "copilot", "lsp", "path", "snippets" },
+			per_filetype = { lua = { inherit_defaults = true, "lazydev" } },
 			providers = {
 				copilot = { name = "copilot", module = "blink-copilot", score_offset = 100, async = true },
+				lazydev = { name = "LazyDev", module = "lazydev.integrations.blink", score_offset = 100 },
+				snippets = {
+					opts = {
+						-- TS files also get the JavaScript snippets (fn, af, cf, asf, ...)
+						extended_filetypes = {
+							typescript = { "javascript" },
+							typescriptreact = { "javascript", "javascriptreact" },
+						},
+					},
+				},
 			},
 		},
 		fuzzy = { implementation = "prefer_rust_with_warning" },

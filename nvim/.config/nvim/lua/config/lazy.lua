@@ -31,6 +31,8 @@ require("lazy").setup({
 	install = { colorscheme = { "lackluster-mint", "habamax" } },
 	-- Check for updates in the background; see them with :Lazy
 	checker = { enabled = true, notify = false },
+	-- No plugin needs luarocks; skip it (silences :checkhealth)
+	rocks = { enabled = false },
 })
 
 require("config.keymaps")
