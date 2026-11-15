@@ -3,6 +3,12 @@ bindings = [
    { key = "Return", mods = "Control|Shift", action = "SpawnNewInstance" }
 ]
 
+# Let Option act as Alt on macOS (needed for tmux M-Arrow bindings);
+# ignored on Linux.
+[window]
+option_as_alt = "Both"
+
+# "Mono" variant keeps icons single-width (matches blink.cmp's
+# nerd_font_variant = "mono"). Install: brew install --cask font-monofur-nerd-font
 [font.normal]
-family = "DepartureMono Nerd Font Mono"
-style = "Regular"
+family = "Monofur Nerd Font Mono"

@@ -1,54 +1,50 @@
 # My Dotfiles
 
-This repository contains my personal dotfiles for customizing my mac/linux environment.
+Personal dotfiles for macOS/Linux, managed with [GNU Stow](https://www.gnu.org/software/stow/).
 
-## What's Included
+## What's included
 
-**TODO**
+| Package     | Target                          | Notes                                                       |
+| ----------- | ------------------------------- | ----------------------------------------------------------- |
+| `nvim`      | `~/.config/nvim`                | Neovim 0.12+, lazy.nvim, native LSP, blink.cmp, fzf-lua, oil |
+| `tmux`      | `~/.config/tmux/tmux.conf`      | tmux 3.1+, TPM, tmux-sensible, tmux-nova                    |
+| `alacritty` | `~/.config/alacritty`           | Monofur Nerd Font Mono                                       |
+| `karabiner` | `~/.config/karabiner`           | Caps Lock → Hyper (Esc when tapped), Hyper+umlauts → brackets |
 
 ## Installation
 
-1.  **Clone the repository:**
+```bash
+git clone https://github.com/foksikus/dotfiles.git ~/.dotfiles
+cd ~/.dotfiles
+brew bundle            # installs stow, neovim, tmux, fonts, ... (see Brewfile)
+stow */                # or individually: stow nvim tmux alacritty karabiner
+```
 
-    ```bash
-    git clone https://github.com/foksikus/dotfiles.git ~/.dotfiles
-    ```
+tmux plugins need TPM once:
 
-2.  **Using Stow:**
+```bash
+git clone https://github.com/tmux-plugins/tpm ~/.config/tmux/plugins/tpm
+# then inside tmux: prefix + I
+```
 
-    Stow is a symbolic link manager that makes it easy to manage dotfiles.
+Neovim installs its plugins, language servers and tree-sitter parsers on first start.
 
-    * **Install Stow:**
+To remove the symlinks: `stow -D */`
 
-        ```bash
-        brew install stow
-        ```
+### Upgrading from the old layout
 
-    * **Navigate to your dotfiles directory:**
+The tmux config moved from `~/.tmux.conf` to `~/.config/tmux/tmux.conf`, and some
+Neovim plugins changed branch. Before pulling:
 
-        ```bash
-        cd ~/.dotfiles
-        ```
+```bash
+cd ~/.dotfiles && stow -D tmux
+```
 
-    * **Use Stow to create symbolic links:**
+After pulling:
 
-        ```bash
-        stow alacritty
-        stow karabiner
-        stow nvim
-        ```
-
-    This will create symbolic links in your home directory pointing to the corresponding files in your `.dotfiles` directory.
-
-    To remove the symlinks, use:
-
-    ```bash
-    stow -D alacritty
-    stow -D nvim
-    stow -D karabiner
-    ```
-
-
-## Contributing
-
-If you have any suggestions or improvements, feel free to submit a pull request.
+```bash
+stow tmux
+mv ~/.tmux/plugins ~/.config/tmux/plugins   # keep installed tmux plugins
+rm -rf ~/.local/share/nvim/lazy/nvim-treesitter ~/.local/share/nvim/lazy/nvim-treesitter-textobjects
+nvim   # lazy.nvim reinstalls the changed plugins; then run :Lazy sync
+```

@@ -1,67 +1,39 @@
--- Taken from:
--- https://github.com/nvim-lua/kickstart.nvim/blob/master/init.lua
+-- Based on kickstart.nvim. Options that are already Neovim defaults
+-- (autoindent, smarttab, ...) are left out.
+local o = vim.opt
 
--- Make line numbers default
-vim.opt.number = true
--- You can also add relative line numbers, to help with jumping.
---  Experiment for yourself to see if you like it!
-vim.opt.relativenumber = true
+o.number = true
+o.relativenumber = true
+o.cursorline = true
+o.signcolumn = "yes"
+o.scrolloff = 15
+o.showmode = false -- mini.statusline shows the mode
+o.breakindent = true
+o.splitright = true
+o.splitbelow = true
 
+-- Indentation fallback; vim-sleuth adjusts per file.
+o.expandtab = true
+o.shiftwidth = 4
+o.tabstop = 4
+o.softtabstop = 4
 
--- Sync clipboard between OS and Neovim.
---  Schedule the setting after `UiEnter` because it can increase startup-time.
---  Remove this option if you want your OS clipboard to remain independent.
---  See `:help 'clipboard'`
+o.undofile = true
+o.ignorecase = true
+o.smartcase = true
+
+o.list = true
+o.listchars = { tab = "» ", trail = "·", nbsp = "␣" }
+
+-- Sync with the OS clipboard (deferred, it can slow down startup)
 vim.schedule(function()
-  vim.opt.clipboard = 'unnamedplus'
+	o.clipboard = "unnamedplus"
 end)
 
-vim.opt.expandtab = true -- Convert tabs to spaces
-vim.opt.shiftwidth = 4 -- Amount to indent with << and >>
-vim.opt.tabstop = 4 -- How many spaces are shown per Tab
-vim.opt.softtabstop = 4 -- How many spaces are applied when pressing Tab
-
-vim.opt.smarttab = true
-vim.opt.smartindent = true
-vim.opt.autoindent = true -- Keep identation from previous line
-
--- Show which line your cursor is on
-vim.opt.cursorline = true
-
--- Minimal number of screen lines to keep above and below the cursor.
-vim.opt.scrolloff = 15
-
-
--- Save undo history
-vim.opt.undofile = true
-
--- Case-insensitive searching UNLESS \C or one or more capital letters in the search term
-vim.opt.ignorecase = true
-vim.opt.smartcase = true
-
-
--- Save undo history
-vim.opt.undofile = true
-vim.opt.showmode = false
-vim.opt.breakindent = true
-
-vim.opt.signcolumn = "yes"
-
-vim.opt.splitright = true
-vim.opt.splitbelow = true
-
-
-
--- Sets how neovim will display certain whitespace characters in the editor.
---  See `:help 'list'`
---  and `:help 'listchars'`
-vim.opt.list = true
-vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
-
-vim.api.nvim_create_autocmd('TextYankPost', {
-  desc = 'Highlight when yanking (copying) text',
-  group = vim.api.nvim_create_augroup('kickstart-highlight-yank', { clear = true }),
-  callback = function()
-    vim.highlight.on_yank()
-  end,
+vim.api.nvim_create_autocmd("TextYankPost", {
+	desc = "Highlight when yanking text",
+	group = vim.api.nvim_create_augroup("user-highlight-yank", { clear = true }),
+	callback = function()
+		vim.hl.on_yank()
+	end,
 })
